@@ -1,6 +1,8 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -10,6 +12,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApi.Data;
+using WebApi.Data.Repository;
+using WebApi.Data.Repository.Resident;
+using WebApi.Schema;
 
 namespace WebApi
 {
@@ -27,10 +33,43 @@ namespace WebApi
         {
 
             services.AddControllers();
+
+            //dbcontext
+            var dbType = Configuration.GetConnectionString("DbType");
+            if (dbType == "MsSql")
+            {
+                var dbConfig = Configuration.GetConnectionString("MsSqlConnection");
+                services.AddDbContext<SiteManagementDbContext>(opts =>
+                opts.UseSqlServer(dbConfig));
+            }
+            else if (dbType == "PostgreSql")
+            {
+                var dbConfig = Configuration.GetConnectionString("PostgreSqlConnection");
+                services.AddDbContext<SiteManagementDbContext>(opts =>
+                  opts.UseNpgsql(dbConfig));
+            }
+
+
+            //Mapper
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new MapperConfig());
+            });
+            services.AddSingleton(config.CreateMapper());
+
+
+            services.AddScoped<IResidentRepository, ResidentRepository>();
+            services.AddScoped<IApartmentRepository, ApartmentRepository>();
+
+
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Site Management", Version = "v1" });
             });
+
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

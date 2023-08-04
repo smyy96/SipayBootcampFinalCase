@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using WebApi.Base.Response;
+using WebApi.Business;
 using WebApi.Data;
 using WebApi.Data.UoW;
 using WebApi.Schema.Apartment;
@@ -13,67 +14,73 @@ namespace WebApi.Controllers
     [Route("api/[controller]s")]
     public class ApartmentController : ControllerBase
     {
-        private readonly IUnitOfWork unitOfWork;
-        private readonly IMapper mapper;
+        private readonly IApartmentService service;
 
-        public ApartmentController(IUnitOfWork unitOfWork, IMapper mapper)
+        public ApartmentController(IApartmentService service)
         {
-            this.unitOfWork = unitOfWork;
-            this.mapper = mapper;
+            this.service = service;
         }
 
 
         [HttpGet]
         public ApiResponse<List<ApartmentResponse>> GetAll()
         {
-            var entityList= unitOfWork.ApartmentRepository.GetAll();
-            var mapped= mapper.Map<List<Apartment>,List<ApartmentResponse>>(entityList);
-            return new ApiResponse<List<ApartmentResponse>>(mapped);
+            var entityList = service.GetAll();
+            return entityList;
         }
+
 
         [HttpGet("id")]
         public ApiResponse<ApartmentResponse> GetById(int id)
         {
-            var entityList = unitOfWork.ApartmentRepository.GetById(id);
-            var mapped = mapper.Map<Apartment, ApartmentResponse>(entityList);
-            return new ApiResponse<ApartmentResponse>(mapped);
+            var entityList = service.GetById(id);
+            return entityList;
         }
-
-        //[HttpGet("DaireNumarası")]
-        //public ApiResponse<ApartmentResponse> GetByReferans(string DaireNumarası)
-        //{
-        //    var entity = repository.GetByReferans(DaireNumarası);
-        //    var mapped = mapper.Map<Apartment, ApartmentResponse>(entity);
-        //    return new ApiResponse<ApartmentResponse>(mapped);
-        //}
-
 
 
         [HttpPost]
         public ApiResponse Post([FromBody] ApartmentRequest request)
         {
-            var entity = mapper.Map<ApartmentRequest, Apartment>(request);
-            unitOfWork.ApartmentRepository.Insert(entity);
-            return new ApiResponse();
+            
+            var response = service.Insert(request);
+            return response;
 
         }
+
 
         [HttpPut("{id}")]
         public ApiResponse Put(int id, [FromBody] ApartmentRequest request)
         {
-            var entity = mapper.Map<ApartmentRequest, Apartment>(request);
-            entity.ApartmentID = id;
-            unitOfWork.ApartmentRepository.Update(entity);
-            return new ApiResponse();
+           var response=service.Update(id, request);
+            return response;
         }
 
 
         [HttpDelete("{id}")]
         public ApiResponse Delete(int id)
         {
-            unitOfWork.ApartmentRepository.DeleteById(id);
-            return new ApiResponse();
+            var delete = service.Delete(id);
+            return delete;
         }
+
+
+
+        //[HttpGet("DaireNumarası")]
+        //public ApiResponse<ApartmentResponse> GetByReferans(string DaireNumarası)
+        //{
+        //    var entity = unitOfWork.ApartmentRepository.GetByReferans(DaireNumarası);
+        //    var mapped = mapper.Map<Apartment, ApartmentResponse>(entity);
+        //    return new ApiResponse<ApartmentResponse>(mapped);
+        //}
+
+
+        //[HttpGet("DaireNumarası")]
+        //public ApiResponse<ApartmentResponse> GetByReferans(string ApartmentNumber)
+        //{
+        //    var entity = unitOfWork.ApartmentRepository.Where(x => x.ApartmentNumber == ApartmentNumber).ToList();
+        //    var mapped = mapper.Map<Apartment, ApartmentResponse>(entity);
+        //    return new ApiResponse<ApartmentResponse>(mapped);
+        //}
 
     }
 }

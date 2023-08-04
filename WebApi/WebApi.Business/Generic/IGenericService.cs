@@ -14,5 +14,7 @@ namespace WebApi.Business.Generic
         ApiResponse Insert(TRequest request);
         ApiResponse Update(int Id, TRequest request);
         ApiResponse Delete(int Id);
+
+        
     }
 }

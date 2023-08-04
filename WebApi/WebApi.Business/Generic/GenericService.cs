@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace WebApi.Business.Generic
         }
 
 
-        public ApiResponse Delete(int Id)
+        public virtual ApiResponse Delete(int Id)
         {
             try
             {
@@ -33,11 +34,12 @@ namespace WebApi.Business.Generic
             }
             catch (Exception e)
             {
+                Log.Error(e, "GenericService.Delete");
                return new ApiResponse(e.Message);
             }
         }
 
-        public ApiResponse<List<TResponse>> GetAll()
+        public virtual ApiResponse<List<TResponse>> GetAll()
         {
             try
             {
@@ -47,11 +49,12 @@ namespace WebApi.Business.Generic
             }
             catch (Exception e)
             {
+                Log.Error(e, "GenericService.GetAll");
                 return new ApiResponse<List<TResponse>>(e.Message);
             }
         }
 
-        public ApiResponse<TResponse> GetById(int id)
+        public virtual ApiResponse<TResponse> GetById(int id)
         {
             try
             {
@@ -63,11 +66,12 @@ namespace WebApi.Business.Generic
             }
             catch (Exception e)
             {
+                Log.Error(e, "GenericService.GetById");
                 return new ApiResponse<TResponse>(e.Message);
             }
         }
 
-        public ApiResponse Insert(TRequest request)
+        public virtual ApiResponse Insert(TRequest request)
         {
             try
             {
@@ -79,12 +83,12 @@ namespace WebApi.Business.Generic
             }
             catch (Exception ex)
             {
-
+                Log.Error(ex, "GenericService.Insert");
                 return new ApiResponse(ex.Message);
             }
         }
 
-        public ApiResponse Update(int Id, TRequest request)
+        public virtual ApiResponse Update(int Id, TRequest request)
         {
             try
             {
@@ -97,7 +101,7 @@ namespace WebApi.Business.Generic
             }
             catch (Exception e)
             {
-
+                Log.Error(e, "GenericService.Update");
                 return new ApiResponse(e.Message); 
             }
         }

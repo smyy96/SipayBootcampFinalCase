@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApi.Business;
 using WebApi.Data;
 using WebApi.Data.UoW;
 using WebApi.Schema;
@@ -54,6 +55,7 @@ namespace WebApi
             {
                 cfg.AddProfile(new MapperConfig());
             });
+
             services.AddSingleton(config.CreateMapper());
 
 
@@ -66,7 +68,7 @@ namespace WebApi
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Site Management", Version = "v1" });
             });
 
-
+            services.AddScoped<IApartmentService, ApartmentService>();
 
         }
 

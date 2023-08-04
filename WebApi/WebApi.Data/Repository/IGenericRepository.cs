@@ -18,6 +18,7 @@ namespace WebApi.Data.Repository
         void Delete(Entity entity);
         void DeleteById(int id);
 
+        IEnumerable<Entity> Where(Expression<Func<Entity,bool>> expression);
         IQueryable<Entity> GetAllAsQueryable();
     }
 }

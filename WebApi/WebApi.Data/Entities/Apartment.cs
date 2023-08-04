@@ -7,8 +7,9 @@ using System.Linq;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
+using WebApi.Data.Entities;
 
-namespace WebApi.Data.Entities
+namespace WebApi.Data
 {
     [Table("Apartment", Schema = "dbo")]
     public class Apartment

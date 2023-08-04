@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.EntityFrameworkCore;
 using WebApi.Base.Response;
-using WebApi.Data.Entities;
-using WebApi.Data.Repository;
+using WebApi.Data;
+using WebApi.Data.UoW;
 using WebApi.Schema.Apartment;
 
 namespace WebApi.Controllers
@@ -12,12 +13,12 @@ namespace WebApi.Controllers
     [Route("api/[controller]s")]
     public class ApartmentController : ControllerBase
     {
-        private readonly IApartmentRepository repository;
+        private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
 
-        public ApartmentController(IApartmentRepository repository, IMapper mapper)
+        public ApartmentController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            this.repository = repository;
+            this.unitOfWork = unitOfWork;
             this.mapper = mapper;
         }
 
@@ -25,25 +26,34 @@ namespace WebApi.Controllers
         [HttpGet]
         public ApiResponse<List<ApartmentResponse>> GetAll()
         {
-            var entityList= repository.GetAll();
+            var entityList= unitOfWork.ApartmentRepository.GetAll();
             var mapped= mapper.Map<List<Apartment>,List<ApartmentResponse>>(entityList);
             return new ApiResponse<List<ApartmentResponse>>(mapped);
         }
 
-        [HttpGet("DaireNumarası")]
-        public ApiResponse<ApartmentResponse> GetById(int DaireNumarası)
+        [HttpGet("id")]
+        public ApiResponse<ApartmentResponse> GetById(int id)
         {
-            var entityList = repository.GetById(DaireNumarası);
+            var entityList = unitOfWork.ApartmentRepository.GetById(id);
             var mapped = mapper.Map<Apartment, ApartmentResponse>(entityList);
             return new ApiResponse<ApartmentResponse>(mapped);
         }
+
+        //[HttpGet("DaireNumarası")]
+        //public ApiResponse<ApartmentResponse> GetByReferans(string DaireNumarası)
+        //{
+        //    var entity = repository.GetByReferans(DaireNumarası);
+        //    var mapped = mapper.Map<Apartment, ApartmentResponse>(entity);
+        //    return new ApiResponse<ApartmentResponse>(mapped);
+        //}
+
 
 
         [HttpPost]
         public ApiResponse Post([FromBody] ApartmentRequest request)
         {
             var entity = mapper.Map<ApartmentRequest, Apartment>(request);
-            repository.Insert(entity);
+            unitOfWork.ApartmentRepository.Insert(entity);
             return new ApiResponse();
 
         }
@@ -53,7 +63,7 @@ namespace WebApi.Controllers
         {
             var entity = mapper.Map<ApartmentRequest, Apartment>(request);
             entity.ApartmentID = id;
-            repository.Update(entity);
+            unitOfWork.ApartmentRepository.Update(entity);
             return new ApiResponse();
         }
 
@@ -61,7 +71,7 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public ApiResponse Delete(int id)
         {
-            repository.DeleteById(id);
+            unitOfWork.ApartmentRepository.DeleteById(id);
             return new ApiResponse();
         }
 

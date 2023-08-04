@@ -14,5 +14,6 @@ namespace WebApi.Schema.Apartment
         public int Floor { get; set; }
         public string ApartmentNumber { get; set; }
         public int? ResidentId { get; set; }
+
     }
 }

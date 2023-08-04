@@ -19,10 +19,4 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.5" />
   </ItemGroup>
 
-
-  <ItemGroup>
-    <Folder Include="Repository\Bill\" />
-    <Folder Include="Repository\Dues\" />
-  </ItemGroup>
-
 </Project>

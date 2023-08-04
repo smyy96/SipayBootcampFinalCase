@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WebApi.Data.Entities;
+using WebApi.Data;
 using WebApi.Schema;
 using WebApi.Schema.Apartment;
 using WebApi.Schema.Resident;
@@ -19,8 +19,8 @@ namespace WebApi.Schema
             CreateMap<ResidentRequest, Data.Entities.Resident > ();
             CreateMap<Data.Entities.Resident, ResidentResponse>();
 
-            CreateMap<ApartmentRequest, Data.Entities.Apartment>();
-            CreateMap<Data.Entities.Apartment, ApartmentResponse >();
+            CreateMap<ApartmentRequest, Data.Apartment>();
+            CreateMap<Data.Apartment, ApartmentResponse >();
 
         }
     }

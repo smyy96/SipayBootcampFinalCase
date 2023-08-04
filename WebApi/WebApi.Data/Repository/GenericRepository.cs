@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static Dapper.SqlMapper;
 
-namespace WebApi.Data.Repository.Base
+namespace WebApi.Data.Repository
 {
     public class GenericRepository<Entity> : IGenericRepository<Entity> where Entity : class
     {
@@ -24,7 +24,7 @@ namespace WebApi.Data.Repository.Base
 
         public void DeleteById(int id)
         {
-            var entity= dbContext.Set<Entity>().Find(id);
+            var entity = dbContext.Set<Entity>().Find(id);
             Delete(entity);
         }
 
@@ -61,6 +61,10 @@ namespace WebApi.Data.Repository.Base
             dbContext.SaveChanges();
         }
 
-        
+        //public abstract Entity GetByReferans(string value)
+        //{
+        //    var entity = dbContext.Set<Entity>().Find(id);
+        //    return entity;
+        //}
     }
 }

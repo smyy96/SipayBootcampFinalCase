@@ -13,8 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApi.Data;
-using WebApi.Data.Repository;
-using WebApi.Data.Repository.Resident;
+using WebApi.Data.UoW;
 using WebApi.Schema;
 
 namespace WebApi
@@ -58,8 +57,7 @@ namespace WebApi
             services.AddSingleton(config.CreateMapper());
 
 
-            services.AddScoped<IResidentRepository, ResidentRepository>();
-            services.AddScoped<IApartmentRepository, ApartmentRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
 
